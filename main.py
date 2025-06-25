@@ -1,5 +1,5 @@
 # main.py
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, status, Form
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from models import UserCreate, UserLogin
@@ -7,8 +7,11 @@ from utils import hash_password, verify_password
 from database import fake_users_db
 from auth import create_access_token, SECRET_KEY, ALGORITHM, get_current_user
 from fastapi.openapi.utils import get_openapi
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 # 🔧 Custom OpenAPI schema to enable Authorize 🔐 button in Swagger UI
 def custom_openapi():

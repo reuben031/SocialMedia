@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LoginLink</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f6f6f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 40px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      width: 360px;
+    }
+
+    .login-container h2 {
+      color: #5c7cfa;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .login-container p {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .forgot {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .forgot a {
+      color: #4c6ef5;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .or {
+      text-align: center;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .or::before,
+    .or::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background-color: #ccc;
+    }
+
+    .or::before {
+      left: 0;
+    }
+
+    .or::after {
+      right: 0;
+    }
+
+    .google-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 10px;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .google-btn img {
+      height: 20px;
+      margin-right: 8px;
+    }
+
+    .signup {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .signup a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>LoginLink</h2>
+    <p>Welcome back! Please enter your details.</p>
+
+    <!-- ✅ FORM for login -->
+    <form id="login-form">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="name@example.com" required>
+
+      <label for="password">Password <span class="forgot"><a href="#">Forgot Password?</a></span></label>
+      <input type="password" id="password" required>
+
+      <button type="submit">Log In</button>
+    </form>
+
+    <div class="or">OR CONTINUE WITH</div>
+
+    <button class="google-btn" onclick="alert('Google Sign-In not yet connected')">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon">
+      <span>Google</span>
+    </button>
+
+    <div class="signup">
+      Don't have an account? <a href="#">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- ✅ JavaScript to send POST request to FastAPI -->
+  <script>
+    document.getElementById("login-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const response = await fetch("http://localhost:8000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Login successful!");
+        localStorage.setItem("access_token", data.access_token);
+        window.location.href = "/profile.html"; // Optional redirect
+      } else {
+        alert(data.detail || "Login failed.");
+      }
+    });
+  </script>
+</body>
+</html>
