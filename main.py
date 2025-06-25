@@ -8,10 +8,11 @@ from database import fake_users_db
 from auth import create_access_token, SECRET_KEY, ALGORITHM, get_current_user
 from fastapi.openapi.utils import get_openapi
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
 
 # 🔧 Custom OpenAPI schema to enable Authorize 🔐 button in Swagger UI
 def custom_openapi():
@@ -48,6 +49,7 @@ def signup(user: UserCreate):
     hashed_pw = hash_password(user.password)
 
     fake_users_db[user.username] = {
+        "username": user.username,     # added for profile
         "password": hashed_pw,
         "role": user.role
     }
@@ -57,17 +59,17 @@ def signup(user: UserCreate):
 
     return {"message": f"User {user.username} created successfully"}
 
-# ✅ Login
+# ✅ Login (using HTML Form)
 @app.post("/login")
-def login(user: UserLogin):
-    db_user = fake_users_db.get(user.username)
+def login(username: str = Form(...), password: str = Form(...)):
+    db_user = fake_users_db.get(username)
     print("Current users:", fake_users_db)
 
-    if not db_user or not verify_password(user.password, db_user["password"]):
+    if not db_user or not verify_password(password, db_user["password"]):
         raise HTTPException(status_code=400, detail="Invalid username or password")
 
     token = create_access_token({
-        "sub": user.username,
+        "sub": username,
         "role": db_user["role"]
     })
 
@@ -93,3 +95,7 @@ def admin_only(current_user: dict = Depends(get_current_user)):
     return {
         "message": f"Hello Admin {current_user['username']}! You have access."
     }
+
+@app.get("/")
+def serve_home():
+    return FileResponse(os.path.join("static", "index.html"))
