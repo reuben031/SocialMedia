@@ -42,22 +42,25 @@ app.openapi = custom_openapi
 
 # ✅ Signup
 @app.post("/signup")
-def signup(user: UserCreate):
-    if user.username in fake_users_db:
+def signup(
+    username: str = Form(...),
+    password: str = Form(...),
+    role: str = Form(...)
+):
+    if username in fake_users_db:
         raise HTTPException(status_code=400, detail="Username already exists")
 
-    hashed_pw = hash_password(user.password)
+    hashed_pw = hash_password(password)
 
-    fake_users_db[user.username] = {
-        "username": user.username,     # added for profile
+    fake_users_db[username] = {
+        "username": username,
         "password": hashed_pw,
-        "role": user.role
+        "role": role
     }
 
-    print("\nCurrent fake_users_db:")
-    print(fake_users_db)
+    print("Current fake_users_db:", fake_users_db)
 
-    return {"message": f"User {user.username} created successfully"}
+    return {"message": f"User {username} created successfully"}
 
 # ✅ Login (using HTML Form)
 @app.post("/login")
