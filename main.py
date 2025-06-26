@@ -48,8 +48,12 @@ def signup(user: UserCreate):
 
     hashed_pw = hash_password(user.password)
 
+    # ✅ Allow role to be "user", "admin", or "superadmin"
+    if user.role not in ["user", "admin", "superadmin"]:
+        raise HTTPException(status_code=400, detail="Invalid role. Choose user, admin, or superadmin.")
+
     fake_users_db[user.username] = {
-        "username": user.username,     # added for profile
+        "username": user.username,     # used for profile
         "password": hashed_pw,
         "role": user.role
     }
@@ -87,15 +91,25 @@ def profile(current_user: dict = Depends(get_current_user)):
         "role": current_user["role"]
     }
 
-# ✅ Admin-only route
+# ✅ Admin-only route (superadmin also allowed)
 @app.get("/admin-only")
 def admin_only(current_user: dict = Depends(get_current_user)):
-    if current_user["role"] != "admin":
-        raise HTTPException(status_code=403, detail="Admins only!")
+    if current_user["role"] not in ["admin", "superadmin"]:
+        raise HTTPException(status_code=403, detail="Admins or superadmins only!")
     return {
-        "message": f"Hello Admin {current_user['username']}! You have access."
+        "message": f"Hello {current_user['role'].capitalize()} {current_user['username']}! You have access."
     }
 
+# ✅ Superadmin-only route
+@app.get("/superadmin-only")
+def superadmin_only(current_user: dict = Depends(get_current_user)):
+    if current_user["role"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Superadmins only!")
+    return {
+        "message": f"Hello Superadmin {current_user['username']}! You have full access."
+    }
+
+# ✅ Serve frontend
 @app.get("/")
 def serve_home():
     return FileResponse(os.path.join("static", "index.html"))
