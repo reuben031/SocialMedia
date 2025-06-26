@@ -53,12 +53,12 @@
     .forgot {
       text-align: right;
       margin-bottom: 20px;
+      font-size: 0.9rem;
     }
 
     .forgot a {
       color: #4c6ef5;
       text-decoration: none;
-      font-size: 0.9rem;
     }
 
     button {
@@ -84,6 +84,11 @@
       width: 48%;
       background-color: #eee;
       color: #333;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     .toggle-btns button.active {
@@ -102,7 +107,7 @@
       <button id="signupTab" onclick="showSignup()">Signup</button>
     </div>
 
-    <!-- Login Form -->
+    <!-- ✅ Login Form -->
     <form id="loginForm" action="http://localhost:8000/login" method="post">
       <label for="username">Username</label>
       <input type="text" id="username" name="username" placeholder="Enter username" required>
@@ -113,7 +118,7 @@
       <button type="submit">Login</button>
     </form>
 
-    <!-- Signup Form (hidden by default) -->
+    <!-- ✅ Signup Form -->
     <form id="signupForm" action="http://localhost:8000/signup" method="post" style="display: none;">
       <label for="new-username">Username</label>
       <input type="text" id="new-username" name="username" placeholder="Enter username" required>
@@ -122,12 +127,13 @@
       <input type="password" id="new-password" name="password" required>
 
       <label for="role">Role (admin or user)</label>
-      <input type="text" id="role" name="role" required>
+      <input type="text" id="role" name="role" placeholder="admin / user" required>
 
       <button type="submit">Sign Up</button>
     </form>
   </div>
 
+  <!-- ✅ JS to switch between login/signup -->
   <script>
     function showLogin() {
       document.getElementById("loginForm").style.display = "block";
