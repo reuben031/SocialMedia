@@ -4,149 +4,134 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LoginLink</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f6f6f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .login-container {
-      background-color: white;
-      border-radius: 10px;
-      padding: 40px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      width: 360px;
-    }
-
-    .login-container h2 {
-      color: #5c7cfa;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .login-container p {
-      text-align: center;
-      color: #555;
-      margin-bottom: 30px;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .forgot {
-      text-align: right;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-    }
-
-    .forgot a {
-      color: #4c6ef5;
-      text-decoration: none;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .toggle-btns {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .toggle-btns button {
-      width: 48%;
-      background-color: #eee;
-      color: #333;
-      border: none;
-      border-radius: 6px;
-      padding: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .toggle-btns button.active {
-      background-color: #2563eb;
-      color: white;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="login-container">
-    <h2>LoginLink</h2>
-    <p>Welcome! Please enter your details.</p>
-
-    <div class="toggle-btns">
-      <button id="loginTab" class="active" onclick="showLogin()">Login</button>
-      <button id="signupTab" onclick="showSignup()">Signup</button>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-6 transition-all">
+    <div class="text-center">
+      <h2 class="text-2xl font-bold text-blue-600">LoginLink</h2>
+      <p class="text-sm text-gray-500 mt-1">Welcome! Please enter your details.</p>
     </div>
 
-    <!-- ✅ Login Form -->
-    <form id="loginForm" action="http://localhost:8000/login" method="post">
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="Enter username" required>
+    <!-- Toggle Buttons -->
+    <div class="flex space-x-2">
+      <button id="loginTab" class="w-1/2 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white">Login</button>
+      <button id="signupTab" class="w-1/2 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">Signup</button>
+    </div>
 
-      <label for="password">Password <span class="forgot"><a href="#">Forgot?</a></span></label>
-      <input type="password" id="password" name="password" required>
+    <!-- Login Form -->
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="login-username" required class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter username">
+      </div>
 
-      <button type="submit">Login</button>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="login-password" required class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter password">
+      </div>
+
+      <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">Login</button>
     </form>
 
-    <!-- ✅ Signup Form -->
-    <form id="signupForm" action="http://localhost:8000/signup" method="post" style="display: none;">
-      <label for="new-username">Username</label>
-      <input type="text" id="new-username" name="username" placeholder="Enter username" required>
+    <!-- Signup Form -->
+    <form id="signupForm" class="space-y-4 hidden">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="signup-username" required class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Choose username">
+      </div>
 
-      <label for="new-password">Password</label>
-      <input type="password" id="new-password" name="password" required>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="signup-password" required class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Choose password">
+      </div>
 
-      <label for="role">Role (admin or user)</label>
-      <input type="text" id="role" name="role" placeholder="admin / user" required>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Role</label>
+        <input type="text" id="signup-role" required class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="user / admin / superadmin">
+      </div>
 
-      <button type="submit">Sign Up</button>
+      <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">Sign Up</button>
     </form>
   </div>
 
-  <!-- ✅ JS to switch between login/signup -->
+  <!-- JS -->
   <script>
-    function showLogin() {
-      document.getElementById("loginForm").style.display = "block";
-      document.getElementById("signupForm").style.display = "none";
-      document.getElementById("loginTab").classList.add("active");
-      document.getElementById("signupTab").classList.remove("active");
-    }
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
 
-    function showSignup() {
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("signupForm").style.display = "block";
-      document.getElementById("loginTab").classList.remove("active");
-      document.getElementById("signupTab").classList.add("active");
+    loginTab.addEventListener("click", () => {
+      loginForm.classList.remove("hidden");
+      signupForm.classList.add("hidden");
+      loginTab.classList.add("bg-blue-600", "text-white");
+      signupTab.classList.remove("bg-blue-600", "text-white");
+      signupTab.classList.add("bg-gray-100", "text-gray-700");
+    });
+
+    signupTab.addEventListener("click", () => {
+      loginForm.classList.add("hidden");
+      signupForm.classList.remove("hidden");
+      signupTab.classList.add("bg-blue-600", "text-white");
+      loginTab.classList.remove("bg-blue-600", "text-white");
+      loginTab.classList.add("bg-gray-100", "text-gray-700");
+    });
+
+    // ✅ Login Handler
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("login-username").value;
+      const password = document.getElementById("login-password").value;
+
+      const response = await fetch("http://localhost:8000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Login successful! Token stored.");
+        localStorage.setItem("token", data.access_token);
+        // Optionally redirect
+      } else {
+        alert(data.detail || "Login failed.");
+      }
+    });
+
+    // ✅ Signup Handler
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("signup-username").value;
+      const password = document.getElementById("signup-password").value;
+      const role = document.getElementById("signup-role").value;
+
+      const response = await fetch("http://localhost:8000/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password, role })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Signup successful! You can now log in.");
+        showLogin(); // Switch back to login form
+      } else {
+        alert(data.detail || "Signup failed.");
+      }
+    });
+
+    function showLogin() {
+      loginForm.classList.remove("hidden");
+      signupForm.classList.add("hidden");
+      loginTab.classList.add("bg-blue-600", "text-white");
+      signupTab.classList.remove("bg-blue-600", "text-white");
+      signupTab.classList.add("bg-gray-100", "text-gray-700");
     }
   </script>
 </body>
