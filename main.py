@@ -1,4 +1,3 @@
-# main.py
 from fastapi import FastAPI, HTTPException, Depends, status, Form
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -9,12 +8,23 @@ from auth import create_access_token, SECRET_KEY, ALGORITHM, get_current_user
 from fastapi.openapi.utils import get_openapi
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware  # ✅ NEW
 import os
 
 app = FastAPI()
+
+# ✅ CORS CONFIG
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 👈 OR set to ["http://localhost:5500"] if you're using Live Server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# 🔧 Custom OpenAPI schema to enable Authorize 🔐 button in Swagger UI
+# 🔧 Custom OpenAPI schema
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
@@ -49,7 +59,7 @@ def signup(user: UserCreate):
     hashed_pw = hash_password(user.password)
 
     fake_users_db[user.username] = {
-        "username": user.username,     # added for profile
+        "username": user.username,
         "password": hashed_pw,
         "role": user.role
     }
